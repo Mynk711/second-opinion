@@ -1,0 +1,12 @@
+sec:
+  request_delay_seconds: 0.2   # SEC allows at most 10 requests per second
+  timeout_seconds: 30
+
+data:
+  raw_dir: data/raw
+  processed_dir: data/processed
+
+download:
+  form: 10-K
+  filings_per_company: 2
+  tickers: [AAPL, MSFT, NVDA, AMZN, GOOGL, JPM, GS, JNJ, PFE, TSLA]
