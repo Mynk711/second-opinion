@@ -10,3 +10,11 @@ download:
   form: 10-K
   filings_per_company: 2
   tickers: [AAPL, MSFT, NVDA, AMZN, GOOGL, JPM, GS, JNJ, PFE, TSLA]
+
+
+chunking:
+  chunk_chars: 2400      # about 600 tokens (roughly 4 characters per token)
+  overlap_chars: 400     # about 100 tokens repeated between neighbouring chunks
+  min_chars: 300         # smaller pieces get merged into the next chunk
+  repeat_limit: 20       # a short line seen this often is a page header or footer
+  skip_items: ["15", "16"]   # exhibit lists and summaries: no useful content

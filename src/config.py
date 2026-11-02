@@ -24,12 +24,20 @@ class DownloadConfig(BaseModel):
     form: str
     filings_per_company: int = Field(ge=1, le=10)
     tickers: list[str]
+    
+class ChunkingConfig(BaseModel):
+    chunk_chars: int = Field(gt=200)
+    overlap_chars: int = Field(ge=0)
+    min_chars: int = Field(ge=0)
+    repeat_limit: int = Field(ge=2)
+    skip_items: list[str]
 
 
 class Settings(BaseModel):
     sec: SECConfig
     data: DataConfig
     download: DownloadConfig
+    chunking: ChunkingConfig
     sec_user_agent: str  # comes from .env, not from config.yaml
 
 
