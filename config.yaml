@@ -18,3 +18,10 @@ chunking:
   min_chars: 300         # smaller pieces get merged into the next chunk
   repeat_limit: 20       # a short line seen this often is a page header or footer
   skip_items: ["15", "16"]   # exhibit lists and summaries: no useful content
+
+
+embedding:
+  model_name: BAAI/bge-small-en-v1.5
+  batch_size: 32
+  # BGE models search better when the question (not the chunks) gets this prefix
+  query_prefix: "Represent this sentence for searching relevant passages: "

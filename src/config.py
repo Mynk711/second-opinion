@@ -32,12 +32,17 @@ class ChunkingConfig(BaseModel):
     repeat_limit: int = Field(ge=2)
     skip_items: list[str]
 
+class EmbeddingConfig(BaseModel):
+    model_name: str
+    batch_size: int = Field(gt=0)
+    query_prefix: str = ""
 
 class Settings(BaseModel):
     sec: SECConfig
     data: DataConfig
     download: DownloadConfig
     chunking: ChunkingConfig
+    embedding: EmbeddingConfig
     sec_user_agent: str  # comes from .env, not from config.yaml
 
 
