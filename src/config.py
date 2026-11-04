@@ -37,12 +37,19 @@ class EmbeddingConfig(BaseModel):
     batch_size: int = Field(gt=0)
     query_prefix: str = ""
 
+class RetrievalConfig(BaseModel):
+    candidates: int = Field(gt=0)
+    rrf_k: int = Field(gt=0)
+    top_k: int = Field(gt=0)    
+
+
 class Settings(BaseModel):
     sec: SECConfig
     data: DataConfig
     download: DownloadConfig
     chunking: ChunkingConfig
     embedding: EmbeddingConfig
+    retrieval: RetrievalConfig
     sec_user_agent: str  # comes from .env, not from config.yaml
 
 

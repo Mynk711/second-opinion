@@ -11,7 +11,6 @@ download:
   filings_per_company: 2
   tickers: [AAPL, MSFT, NVDA, AMZN, GOOGL, JPM, GS, JNJ, PFE, TSLA]
 
-
 chunking:
   chunk_chars: 2400      # about 600 tokens (roughly 4 characters per token)
   overlap_chars: 400     # about 100 tokens repeated between neighbouring chunks
@@ -19,9 +18,13 @@ chunking:
   repeat_limit: 20       # a short line seen this often is a page header or footer
   skip_items: ["15", "16"]   # exhibit lists and summaries: no useful content
 
-
 embedding:
   model_name: BAAI/bge-small-en-v1.5
   batch_size: 32
   # BGE models search better when the question (not the chunks) gets this prefix
   query_prefix: "Represent this sentence for searching relevant passages: "
+
+retrieval:
+  candidates: 50   # how many results each search method passes to the fusion step
+  rrf_k: 60        # standard RRF constant; higher = less weight on any single #1
+  top_k: 5         # how many final results to return
