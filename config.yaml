@@ -34,3 +34,6 @@ retrieval:
 reranker:
   model_name: cross-encoder/ms-marco-MiniLM-L-6-v2   # small and fast; compare with BAAI/bge-reranker-base
   batch_size: 32
+
+
+#
