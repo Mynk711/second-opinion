@@ -7,7 +7,7 @@ from config import ROOT
 from retrieval import search
 
 MODES = ["dense", "bm25", "hybrid"]
-K = 10  # look at the top 10 so we can report Hit@5, Hit@10, and MRR
+K = 50  # look at the top 10 so we can report Hit@5, Hit@10, and MRR
 
 
 def is_relevant(chunk, q):
@@ -33,12 +33,13 @@ for q in questions:
 
 df = pd.DataFrame(rows)
 df["hit@5"] = df["rank"].le(5)
-df["hit@10"] = df["rank"].notna()
+df["hit@10"] = df["rank"].le(10)
+df["hit@50"] = df["rank"].notna()
 df["mrr"] = (1 / df["rank"]).fillna(0)
 
 print(f"\n{len(questions)} questions\n")
 print("OVERALL")
-print(df.groupby("mode")[["hit@5", "hit@10", "mrr"]].mean().round(2).to_string())
+print(df.groupby("mode")[["hit@5", "hit@10", "hit@50", "mrr"]].mean().round(2).to_string())
 
 print("\nHIT@5 BY QUESTION TYPE")
 print(df.pivot_table(index="type", columns="mode", values="hit@5").round(2).to_string())
