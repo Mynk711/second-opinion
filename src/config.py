@@ -40,7 +40,14 @@ class EmbeddingConfig(BaseModel):
 class RetrievalConfig(BaseModel):
     candidates: int = Field(gt=0)
     rrf_k: int = Field(gt=0)
-    top_k: int = Field(gt=0)    
+    top_k: int = Field(gt=0)
+    dense_weight: float = Field(ge=0)
+    bm25_weight: float = Field(ge=0)
+    
+class RerankerConfig(BaseModel):
+    model_name: str
+    batch_size: int = Field(gt=0)    
+    
 
 
 class Settings(BaseModel):
@@ -50,6 +57,7 @@ class Settings(BaseModel):
     chunking: ChunkingConfig
     embedding: EmbeddingConfig
     retrieval: RetrievalConfig
+    reranker: RerankerConfig
     sec_user_agent: str  # comes from .env, not from config.yaml
 
 

@@ -1,12 +1,12 @@
 from datetime import datetime
-
+import time
 import pandas as pd
 import yaml
 
 from config import ROOT
 from retrieval import search
 
-MODES = ["dense", "bm25", "hybrid"]
+MODES = ["dense", "bm25", "hybrid", "rerank"]
 K = 50  # look at the top 10 so we can report Hit@5, Hit@10, and MRR
 
 
@@ -26,10 +26,12 @@ questions = yaml.safe_load((ROOT / "evals" / "retrieval_questions.yaml").read_te
 rows = []
 for q in questions:
     for mode in MODES:
+        start = time.perf_counter()
         results = search(q["question"], mode=mode, top_k=K, **q.get("filters", {}))
+        seconds = time.perf_counter() - start
         # Rank of the first correct chunk, or None if none in the top K
         rank = next((n for n, r in enumerate(results, start=1) if is_relevant(r["chunk"], q)), None)
-        rows.append({"id": q["id"], "type": q["type"], "mode": mode, "rank": rank})
+        rows.append({"id": q["id"], "type": q["type"], "mode": mode, "rank": rank, "seconds": seconds})
 
 df = pd.DataFrame(rows)
 df["hit@5"] = df["rank"].le(5)
@@ -39,13 +41,13 @@ df["mrr"] = (1 / df["rank"]).fillna(0)
 
 print(f"\n{len(questions)} questions\n")
 print("OVERALL")
-print(df.groupby("mode")[["hit@5", "hit@10", "hit@50", "mrr"]].mean().round(2).to_string())
+print(df.groupby("mode")[["hit@5", "hit@10", "hit@50", "mrr", "seconds"]].mean().round(2).to_string())
 
 print("\nHIT@5 BY QUESTION TYPE")
 print(df.pivot_table(index="type", columns="mode", values="hit@5").round(2).to_string())
 
 print("\nHYBRID MISSES (not in top 5)")
-misses = df[(df["mode"] == "hybrid") & ~df["hit@5"]]
+misses = df[(df["mode"] == "rerank") & ~df["hit@5"]]
 print(misses[["id", "type", "rank"]].to_string(index=False) if len(misses) else "none")
 
 # Save every run, so we can compare before/after each change

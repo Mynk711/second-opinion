@@ -8,7 +8,7 @@ parser.add_argument("--ticker", help="only search one company, e.g. AAPL")
 parser.add_argument("--item", help="only search one section, e.g. 1A")
 parser.add_argument("--year", help="only search filings for one fiscal year, e.g. 2024")
 parser.add_argument("--all-years", action="store_true", help="search every year, not just the latest")
-parser.add_argument("--mode", choices=["dense", "bm25", "hybrid"], default="hybrid")
+parser.add_argument("--mode", choices=["dense", "bm25", "hybrid", "rerank"], default="hybrid")
 parser.add_argument("-k", type=int, help="how many results to show")
 args = parser.parse_args()
 

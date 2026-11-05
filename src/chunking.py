@@ -6,26 +6,40 @@ from config import settings
 cfg = settings.chunking
 PAGE_NUMBER = re.compile(r"^\d{1,3}$")       # a line that is only a page number
 SYMBOLS_ONLY = re.compile(r"^[\W_]+$")       # a line with no letters or digits, like "$" or ")"
+
+DIGITS = re.compile(r"\d+")
+
+
+def footer_key(line):
+    """Mask digits so one running footer matches on every page ("... | 7", "... | 8")."""
+    return DIGITS.sub("#", line)
+
 SENTENCE_END = re.compile(r"(?<=[.!?])\s+")  # split point between sentences
 
 
 def find_boilerplate(sections):
     """
-    Repeated short lines that sit next to page numbers: running headers and footers.
-    Table headings like "(In millions)" also repeat, but not next to page numbers, so they stay.
+    Running headers and footers in one filing. Two kinds:
+    - short lines that repeat next to page numbers (table headings like "(In millions)" stay)
+    - short lines naming the form, like "Apple Inc. | 2025 Form 10-K | 7", even with "|" in them
     """
-    total, near_page = Counter(), Counter()
+    total, near_page, footers = Counter(), Counter(), Counter()
     for s in sections:
         lines = [line for line in s["text"].split("\n") if line]
         for i, line in enumerate(lines):
+            if len(line) < 100 and "form 10-k" in line.lower():
+                footers[footer_key(line)] += 1
             if "|" in line or len(line) >= 100 or PAGE_NUMBER.match(line):
                 continue
             total[line] += 1
             neighbours = lines[max(0, i - 2): i + 3]
             if any(PAGE_NUMBER.match(n) for n in neighbours):
                 near_page[line] += 1
-    return {line for line, n in total.items()
-            if n >= cfg.repeat_limit and near_page[line] / n >= 0.5}
+
+    repeated = {line for line, n in total.items()
+                if n >= cfg.repeat_limit and near_page[line] / n >= 0.5}
+    form_footers = {key for key, n in footers.items() if n >= cfg.repeat_limit}
+    return repeated | form_footers
 
 
 def clean_lines(text, boilerplate):
@@ -34,7 +48,8 @@ def clean_lines(text, boilerplate):
             if line
             and not PAGE_NUMBER.match(line)
             and not SYMBOLS_ONLY.match(line)
-            and line not in boilerplate]
+            and line not in boilerplate
+            and footer_key(line) not in boilerplate]
 
 
 def split_long(line):

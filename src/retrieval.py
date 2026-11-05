@@ -7,9 +7,11 @@ import numpy as np
 from config import settings
 from embeddings import embed_query
 from lexical import tokenize
+from reranker import rerank_scores
 
 DIR = settings.data.processed_dir
 cfg = settings.retrieval
+MODES = ("dense", "bm25", "hybrid", "rerank")
 
 
 @lru_cache(maxsize=1)
@@ -57,23 +59,36 @@ def bm25_search(query, mask, n):
     return _top(bm25.get_scores(tokenize(query)), mask, n)
 
 
-def rrf(rank_lists, k):
-    """Reciprocal Rank Fusion: a chunk scores 1/(k + rank) in every list it appears in."""
+def rrf(rank_lists, k, weights):
+    """Weighted Reciprocal Rank Fusion: a chunk scores weight/(k + rank) in every list it appears in."""
     scores = {}
-    for ranks in rank_lists:
+    for ranks, weight in zip(rank_lists, weights):
         for rank, i in enumerate(ranks, start=1):
-            scores[i] = scores.get(i, 0.0) + 1.0 / (k + rank)
+            scores[i] = scores.get(i, 0.0) + weight / (k + rank)
     return sorted(scores, key=scores.get, reverse=True)
 
 
 def search(query, mode="hybrid", top_k=None, **filters):
-    """Search chunks with "dense", "bm25", or "hybrid" (both, fused with RRF)."""
+    """Search chunks with "dense", "bm25", "hybrid" (RRF), or "rerank" (cross-encoder)."""
+    if mode not in MODES:
+        raise ValueError(f"mode must be one of {MODES}")
     chunks, _, _ = load_index()
     mask = filter_mask(chunks, **filters)
 
-    dense = dense_search(query, mask, cfg.candidates) if mode in ("dense", "hybrid") else []
-    lexical = bm25_search(query, mask, cfg.candidates) if mode in ("bm25", "hybrid") else []
-    order = {"dense": dense, "bm25": lexical}.get(mode) or rrf([dense, lexical], cfg.rrf_k)
+    dense = dense_search(query, mask, cfg.candidates) if mode != "bm25" else []
+    lexical = bm25_search(query, mask, cfg.candidates) if mode != "dense" else []
+
+    if mode == "dense":
+        order = dense
+    elif mode == "bm25":
+        order = lexical
+    elif mode == "hybrid":
+        order = rrf([dense, lexical], cfg.rrf_k, [cfg.dense_weight, cfg.bm25_weight])
+    else:
+        # Rerank the union of both lists, so a chunk only one method found is not penalized
+        pool = list(dict.fromkeys(dense + lexical))
+        scores = rerank_scores(query, [chunks[i] for i in pool])
+        order = [i for _, i in sorted(zip(scores, pool), key=lambda pair: -pair[0])]
 
     # Keep each result's rank in both lists, so we can see which method found it
     dense_rank = {i: r for r, i in enumerate(dense, start=1)}

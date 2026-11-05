@@ -28,3 +28,9 @@ retrieval:
   candidates: 50   # how many results each search method passes to the fusion step
   rrf_k: 60        # standard RRF constant; higher = less weight on any single #1
   top_k: 5         # how many final results to return
+  dense_weight: 2.0  # RRF weight for the dense list
+  bm25_weight: 1.0   # RRF weight for the BM25 list
+
+reranker:
+  model_name: cross-encoder/ms-marco-MiniLM-L-6-v2   # small and fast; compare with BAAI/bge-reranker-base
+  batch_size: 32
