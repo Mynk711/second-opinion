@@ -1,0 +1,85 @@
+# Retrieval eval set. A retrieved chunk counts as correct if it matches every rule in
+# "relevant": the company (if given), one of the sections, and contains one of the phrases.
+#
+# filters: what the agent would pass to search (ticker, item, year, all_years)
+# type: risk | mda | business | cross_company | relocated | numeric | year_specific
+
+- id: aapl-suppliers
+  question: What are Apple's risks from depending on a few suppliers?
+  type: risk
+  filters: {ticker: AAPL}
+  relevant:
+    items: ["1A"]
+    contains_any: ["single or limited sources"]
+
+- id: aapl-tariffs
+  question: How have new U.S. tariffs affected Apple?
+  type: risk
+  filters: {ticker: AAPL}
+  relevant:
+    items: ["1A", "7"]
+    contains_any: ["U.S. Tariffs", "reciprocal tariffs"]
+
+- id: jpm-cyber
+  question: How does JPMorgan manage cybersecurity risk?
+  type: relocated
+  filters: {ticker: JPM}
+  relevant:
+    items: ["1C", "7"]
+    contains_any: ["Cybersecurity risk is the risk of harm"]
+
+- id: tsla-services-growth
+  question: Why did Tesla's services and other revenue increase?
+  type: mda
+  filters: {ticker: TSLA}
+  relevant:
+    items: ["7"]
+    contains_any: ["Services and other revenue increased"]
+
+- id: tsla-total-revenue
+  question: What was Tesla's total revenue in 2025?
+  type: numeric
+  filters: {ticker: TSLA}
+  relevant:
+    items: ["7", "8"]
+    contains_any: ["Total revenues"]
+
+- id: gs-china
+  question: What geopolitical risks does Goldman Sachs face involving China?
+  type: risk
+  filters: {ticker: GS}
+  relevant:
+    items: ["1A"]
+    contains_any: ["China and Taiwan"]
+
+- id: tariffs-across-companies
+  question: Which companies discuss risks from tariffs?
+  type: cross_company
+  filters: {}
+  relevant:
+    items: ["1A", "7"]
+    contains_any: ["tariffs"]
+
+- id: msft-trade
+  question: How do trade laws and sanctions affect Microsoft?
+  type: risk
+  filters: {ticker: MSFT}
+  relevant:
+    items: ["1A"]
+    contains_any: ["trade laws, policies, sanctions"]
+
+- id: nvda-export
+  question: How do export controls affect Nvidia's business?
+  type: risk
+  filters: {ticker: NVDA}
+  relevant:
+    items: ["1A", "7"]
+    contains_any: ["export control", "export restriction"]
+
+- id: aapl-2024-disasters
+  question: In its fiscal 2024 report, how does Apple describe natural disaster risk?
+  type: year_specific
+  filters: {ticker: AAPL, year: 2024}
+  relevant:
+    items: ["1A"]
+    contains_any: ["earthquakes"]
