@@ -83,3 +83,299 @@
   relevant:
     items: ["1A"]
     contains_any: ["earthquakes"]
+
+# Batch 2: 40 questions written from the chunk text, phrased the way an analyst would ask.
+# Every phrase in contains_any was checked to exist in the filing the filters point to.
+
+# ---------- NVDA ----------
+- id: nvda-revenue-drivers
+  question: What was behind Nvidia's revenue growth this fiscal year?
+  type: mda
+  filters: {ticker: NVDA}
+  relevant:
+    contains_any: ["driven by data center compute and networking platforms"]
+
+- id: nvda-gross-margin
+  question: Why did Nvidia's gross margin shrink?
+  type: mda
+  filters: {ticker: NVDA}
+  relevant:
+    contains_any: ["Gross margins decreased to 71.1%", "H20 excess inventory"]
+
+- id: nvda-ai-cyberattacks
+  question: Does Nvidia worry that attackers will use AI against its systems?
+  type: risk
+  filters: {ticker: NVDA}
+  relevant:
+    contains_any: ["using AI technology to launch more automated"]
+
+- id: nvda-software-engineers
+  question: How much of Nvidia's engineering effort goes into software rather than chips?
+  type: business
+  filters: {ticker: NVDA}
+  relevant:
+    contains_any: ["More than half of our engineers work on software"]
+
+# ---------- AMZN ----------
+- id: amzn-segments
+  question: How does Amazon split its business for reporting purposes?
+  type: business
+  filters: {ticker: AMZN}
+  relevant:
+    contains_any: ["three segments: North America, International, and AWS"]
+
+- id: amzn-product-liability
+  question: Can Amazon be held responsible if something it sells injures a customer?
+  type: risk
+  filters: {ticker: AMZN}
+  relevant:
+    contains_any: ["product liability or food safety claims"]
+
+- id: amzn-operating-cash
+  question: How much cash did Amazon's operations bring in during 2025?
+  type: numeric
+  filters: {ticker: AMZN}
+  relevant:
+    contains_any: ["Operating activities | $115,877"]
+
+# ---------- GOOGL ----------
+- id: googl-search-growth
+  question: What pushed Google's search advertising revenue higher in 2025?
+  type: mda
+  filters: {ticker: GOOGL}
+  relevant:
+    contains_any: ["Google Search & other revenues increased"]
+
+- id: googl-tac
+  question: Why does Google pay away a bigger share of revenue for ads shown on partner sites?
+  type: mda
+  filters: {ticker: GOOGL}
+  relevant:
+    contains_any: ["TAC as a percentage of revenues generated from ads placed on Google Network"]
+
+- id: googl-privacy
+  question: How could the way Alphabet handles personal data come back to hurt it?
+  type: risk
+  filters: {ticker: GOOGL}
+  relevant:
+    contains_any: ["data-privacy-related matters"]
+
+# ---------- MSFT ----------
+- id: msft-azure-growth
+  question: How quickly did Microsoft's cloud platform grow this year?
+  type: numeric
+  filters: {ticker: MSFT}
+  relevant:
+    contains_any: ["Azure and other cloud services revenue increased 41%"]
+
+- id: msft-tax-ireland
+  question: Why does Microsoft pay a lower tax rate than the standard U.S. corporate rate?
+  type: mda
+  filters: {ticker: MSFT}
+  relevant:
+    contains_any: ["foreign regional operations center in Ireland"]
+
+- id: msft-harmful-content
+  question: What risks does Microsoft face if people use its services to spread illegal material?
+  type: risk
+  filters: {ticker: MSFT}
+  relevant:
+    contains_any: ["harmful or illegal content"]
+
+- id: msft-rpo
+  question: How large is Microsoft's backlog of contracted commercial revenue?
+  type: numeric
+  filters: {ticker: MSFT}
+  relevant:
+    contains_any: ["Commercial remaining performance obligation increased 84%"]
+
+# ---------- AAPL ----------
+- id: aapl-products-margin
+  question: Why did Apple's hardware profit margin improve in 2025?
+  type: mda
+  filters: {ticker: AAPL}
+  relevant:
+    contains_any: ["Products gross margin increased during 2025"]
+
+- id: aapl-dividend
+  question: How much does Apple pay shareholders each quarter as a dividend?
+  type: numeric
+  filters: {ticker: AAPL}
+  relevant:
+    contains_any: ["quarterly cash dividend was $0.26 per share"]
+
+- id: aapl-manufacturing-countries
+  question: In which countries are Apple's products mostly made?
+  type: risk
+  filters: {ticker: AAPL}
+  relevant:
+    contains_any: ["outsourcing partners located primarily in China mainland"]
+
+# ---------- GS ----------
+- id: gs-liquidity-coverage
+  question: How much high-quality liquidity does Goldman Sachs hold against stressed outflows?
+  type: numeric
+  filters: {ticker: GS}
+  relevant:
+    contains_any: ["Total HQLA"]
+
+- id: gs-platform-solutions
+  question: How did Goldman's consumer and platform business perform?
+  type: mda
+  filters: {ticker: GS}
+  relevant:
+    contains_any: ["Platform Solutions operating results"]
+
+- id: gs-credit-loss-method
+  question: How does Goldman Sachs estimate expected losses on its loans?
+  type: mda
+  filters: {ticker: GS}
+  relevant:
+    contains_any: ["weighted average of a range of forecasts of future economic conditions"]
+
+- id: gs-country-risk
+  question: What can go wrong for Goldman when it does business in foreign countries?
+  type: risk
+  filters: {ticker: GS}
+  relevant:
+    contains_any: ["nationalization, expropriation"]
+
+# ---------- JPM ----------
+- id: jpm-noninterest-revenue
+  question: How much did JPMorgan earn from fees and other non-lending activities in 2025?
+  type: numeric
+  filters: {ticker: JPM}
+  relevant:
+    contains_any: ["was $87.0 billion, up 2%"]
+
+- id: jpm-liquidity-risk
+  question: What could leave JPMorgan short of funding?
+  type: risk
+  filters: {ticker: JPM}
+  relevant:
+    contains_any: ["liquidity is constrained"]
+
+- id: jpm-model-risk
+  question: What are the dangers of JPMorgan relying on quantitative models?
+  type: risk
+  filters: {ticker: JPM}
+  relevant:
+    contains_any: ["Some models and estimations used by JPMorganChase"]
+
+- id: jpm-securities-services
+  question: Why did JPMorgan's custody and securities servicing revenue rise?
+  type: mda
+  filters: {ticker: JPM}
+  relevant:
+    contains_any: ["Securities Services revenue was $5.6 billion"]
+
+# ---------- JNJ ----------
+- id: jnj-talc
+  question: What changed in Johnson & Johnson's provision for talc lawsuits in 2025?
+  type: mda
+  filters: {ticker: JNJ}
+  relevant:
+    contains_any: ["previously accrued talc reserve"]
+
+- id: jnj-price-volume
+  question: How much of J&J's sales growth came from selling more versus charging more?
+  type: numeric
+  filters: {ticker: JNJ}
+  relevant:
+    contains_any: ["Sales increase/(decrease) due to"]
+
+- id: jnj-outside-manufacturers
+  question: Does Johnson & Johnson depend on other companies to make its products?
+  type: risk
+  filters: {ticker: JNJ}
+  relevant:
+    contains_any: ["relies on third parties to manufacture and supply"]
+
+# ---------- PFE ----------
+- id: pfe-pricing-agreement
+  question: Has Pfizer agreed with the U.S. government to cut what patients pay for medicines?
+  type: risk
+  filters: {ticker: PFE}
+  relevant:
+    contains_any: ["voluntary agreements with the Trump Administration"]
+
+- id: pfe-tariffs
+  question: How could trade wars hurt Pfizer?
+  type: risk
+  filters: {ticker: PFE}
+  relevant:
+    contains_any: ["If trade restrictions or tariffs reduce global economic activity"]
+
+- id: pfe-it-disruption
+  question: What happens to Pfizer if its computer systems are hacked or go down?
+  type: risk
+  filters: {ticker: PFE}
+  relevant:
+    contains_any: ["Significant disruptions of IT systems"]
+
+- id: pfe-tax-rate
+  question: What was Pfizer's effective tax rate on continuing operations in 2025?
+  type: numeric
+  filters: {ticker: PFE}
+  relevant:
+    contains_any: ["(3.5)% in 2025"]
+
+# ---------- TSLA ----------
+- id: tsla-emission-credits
+  question: How does Tesla make money from emissions rules?
+  type: business
+  filters: {ticker: TSLA}
+  relevant:
+    contains_any: ["tradable credits"]
+
+- id: tsla-energy-incentives
+  question: What happens to Tesla's solar and battery business if government subsidies end?
+  type: risk
+  filters: {ticker: TSLA}
+  relevant:
+    contains_any: ["governmental rebates, tax credits and other financial incentives"]
+
+- id: tsla-driver-responsibility
+  question: Who is in charge of the car when Tesla's driver assistance is switched on?
+  type: business
+  filters: {ticker: TSLA}
+  relevant:
+    contains_any: ["the driver is responsible for remaining fully engaged"]
+
+# ---------- Cross-company ----------
+- id: cross-ransomware
+  question: Which companies warn that ransomware could disrupt their operations?
+  type: cross_company
+  filters: {}
+  relevant:
+    contains_any: ["ransomware"]
+
+- id: cross-ai-buildout
+  question: Which companies are spending heavily to build data centers for AI?
+  type: cross_company
+  filters: {}
+  relevant:
+    contains_any: ["AI infrastructure"]
+
+- id: cross-drug-pricing
+  question: Which drugmakers are under pressure from government limits on medicine prices?
+  type: cross_company
+  filters: {}
+  relevant:
+    tickers: ["JNJ", "PFE"]
+    contains_any: ["drug pricing"]
+
+# ---------- Year-specific (older filing) ----------
+- id: msft-fy2025-azure
+  question: In fiscal 2025, how fast did Microsoft's Azure business grow?
+  type: year_specific
+  filters: {ticker: MSFT, year: 2025}
+  relevant:
+    contains_any: ["Azure and other cloud services revenue growth of 34%", "Azure and other cloud services revenue grew 34%"]
+
+- id: nvda-fy2025-revenue
+  question: What was Nvidia's total revenue in fiscal 2025?
+  type: year_specific
+  filters: {ticker: NVDA, year: 2025}
+  relevant:
+    contains_any: ["Revenue for fiscal year 2025 was"]
